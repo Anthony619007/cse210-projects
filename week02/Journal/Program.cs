@@ -1,5 +1,6 @@
 using System;
 
+
 class Program
 {
     private static Journal journal = new Journal();
@@ -462,8 +463,9 @@ class Program
         {
             string moodEmoji = group.Mood >= 4 ? "😄" : 
                               group.Mood == 3 ? "😐" : "😞";
-            string bar = new string('█', group.Count);
-            string padding = new string(' ', 10 - group.Count);
+            int barLength = Math.Min(group.Count, 30);
+            string bar = new string('█', barLength);
+            string padding = new string(' ', Math.Max(0, 10 - barLength));
             Console.WriteLine($"   {group.Mood}⭐ {moodEmoji}: {bar}{padding} ({group.Count} entries)");
         }
         
