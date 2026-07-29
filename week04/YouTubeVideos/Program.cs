@@ -1,45 +1,60 @@
 using System;
 using System.Collections.Generic;
+
 class Program
 {
-static void Main(string[] args)
-{
-List videos = new List(); 
-Video video1 = new Video("C# Programming Tutorial for Beginners"
-"CodeMaster", 720);
-video1.AddComment(new Comment("JohnDoe", "Great tutorial! Very helpful."));
-video1.AddComment(new Comment("JaneSmith", "I finally understand classes!"));
-video1.AddComment(new Comment("DevGuy", "Could you make a video on inheritance?"));
-video1.AddComment(new Comment("CodeNewbie", "This was exactly what I needed. Thanks!"));
-videos.Add(video1);
-Video video2 = new Video("Understanding OOP Principles"
-"TechTeacher", 540);
-video2.AddComment(new Comment("StudentOne", "Encapsulation makes so much sense now."));
-video2.AddComment(new Comment("PolyMorph", "Polymorphism example was perfect!"));
-video2.AddComment(new Comment("CSharpFan", "Great explanation of abstraction."));
-videos.Add(video2);
-Video video3 = new Video("Building a To-Do List App in C#"
-"DevPro", 900);
-video3.AddComment(new Comment("AppBuilder", "This project was fun to follow along!"));
-video3.AddComment(new Comment("CleanCode", "I like how you organized the code."));
-video3.AddComment(new Comment("NewDev", "My first working app! Thanks!"));
-video3.AddComment(new Comment("SeniorDev", "Good practices shown here."));
-videos.Add(video3);
-Video video4 = new Video("C# LINQ Tutorial", "QueryMaster", 480);
-video4.AddComment(new Comment("DataGuy", "LINQ is so powerful!"));
-video4.AddComment(new Comment("SqlPro", "This is like SQL but in C# awesome!"));
-video4.AddComment(new Comment("CodeNinja", "The lambda expressions make sense now."));
-videos.Add(video4);
-Console.WriteLine("===== YOUTUBE VIDEO COMMENT TRACKER ===== ");
-foreach (Video video in videos)
-{
-Console.WriteLine($"Title: {video.GetTitle()});
-Console.WriteLine($"Author: {video.GetAuthor()});
-Console.WriteLine($"Length: {video.GetLengthInSeconds()} seconds ({video.GetLengthInMinutes():F1} minutes));
-Console.Write($"Number of Comments: {video.GetNumberOfComments()});
-public Comment(string commenterName, string commentText)
-{this.commenterName = commenterName;this.commentText = commentText;}
-public string GetCommenterName()=>commenterName;
-private string commenterName Comment: this;CommentText: This is like SQL but in C# awesome!
-private string commentText
-public string GetCommenterName()
+    static void Main(string[] args)
+    {
+        // Create a list to store videos
+        List<Video> videos = new List<Video>();
+
+        // Create first video
+        Video video1 = new Video("C# Tutorial for Beginners", "John Smith", 1250);
+        video1.AddComment(new Comment("Alice Johnson", "Great explanation! Very helpful for learning C#."));
+        video1.AddComment(new Comment("Bob Williams", "The pacing was perfect. I could follow along easily."));
+        video1.AddComment(new Comment("Carol Davis", "Thanks for breaking down the concepts. Subscribed!"));
+        video1.AddComment(new Comment("David Brown", "Best tutorial I've found so far."));
+        videos.Add(video1);
+
+        // Create second video
+        Video video2 = new Video("Advanced OOP Concepts", "Sarah Wilson", 2150);
+        video2.AddComment(new Comment("Emma White", "This really helped me understand inheritance."));
+        video2.AddComment(new Comment("Frank Miller", "Could you explain interfaces more? Loved this video."));
+        video2.AddComment(new Comment("Grace Lee", "Professional content. Keep it up!"));
+        videos.Add(video2);
+
+        // Create third video
+        Video video3 = new Video("Building Web APIs with C#", "Michael Chen", 1875);
+        video3.AddComment(new Comment("Henry Clark", "Finally understand how to build REST APIs properly."));
+        video3.AddComment(new Comment("Isabella Green", "The example project was amazing!"));
+        video3.AddComment(new Comment("Jack Martin", "Clear and concise. Perfect for beginners."));
+        video3.AddComment(new Comment("Karen Robinson", "This is exactly what I needed for my project."));
+        videos.Add(video3);
+
+        // Create fourth video
+        Video video4 = new Video("Database Design with SQL Server", "Robert Taylor", 2300);
+        video4.AddComment(new Comment("Laura Hall", "Best explanation of normalization I've ever seen."));
+        video4.AddComment(new Comment("Mark Anderson", "Very thorough and well-structured."));
+        video4.AddComment(new Comment("Nancy Thomas", "Helped me pass my database exam!"));
+        videos.Add(video4);
+
+        // Display all videos and their comments
+        foreach (Video video in videos)
+        {
+            Console.WriteLine("========================================");
+            Console.WriteLine($"Title: {video.GetTitle()}");
+            Console.WriteLine($"Author: {video.GetAuthor()}");
+            Console.WriteLine($"Length: {video.GetLength()} seconds");
+            Console.WriteLine($"Number of Comments: {video.GetCommentCount()}");
+            Console.WriteLine("----------------------------------------");
+            Console.WriteLine("Comments:");
+
+            foreach (Comment comment in video.GetComments())
+            {
+                Console.WriteLine($"  - {comment.GetCommenterName()}: {comment.GetText()}");
+            }
+
+            Console.WriteLine();
+        }
+    }
+}
