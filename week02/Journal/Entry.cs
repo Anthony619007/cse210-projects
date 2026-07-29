@@ -1,69 +1,82 @@
 using System;
+using System.Globalization; // Needed for more robust date parsing if we ever go there, but good to include.
+
 public class Entry
 {
-    private string prompt;
-    private string response;
-    private string date;      // Stored as a string (per assignment simplification), format: yyyy-MM-dd HH:mm:ss
-    private int moodRating;   // 1 (worst) - 5 (best)
+    private string _promptText; // What was the user asked or what triggered this entry?
+    private string _userResponse; // The actual content the user wrote.
+    private string _entryDateRaw; // Storing date as a string for simplicity, as per initial requirements.
+                                  // Format: "yyyy-MM-dd HH:mm:ss". Could be DateTime, but string works for now.
+    private int _moodScore;       // A simple rating from 1 (feeling pretty bad) to 5 (feeling great!).
 
-    /// <summary>
-    /// Creates a brand new entry, automatically stamped with the current date/time.
-    /// </summary>
+    /// <param name="prompt">The question or topic given to the user.</param>
+    /// <param name="response">The user's written response to the prompt.</param>
+    /// <param name="moodRating">The user's mood, on a scale of 1 to 5.</param>
     public Entry(string prompt, string response, int moodRating)
     {
-        this.prompt = prompt;
-        this.response = response;
-        this.moodRating = moodRating;
-        this.date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        this._promptText = prompt;
+        this._userResponse = response;
+        this._moodScore = moodRating;
+        // Capture the exact moment this entry was created. It's like a digital timestamp!
+        this._entryDateRaw = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
     }
 
-    /// <summary>
-    /// Recreates an entry with an explicit date, used when loading entries back
-    /// in from a saved file so the original date is preserved.
-    /// </summary>
+    /// <param name="prompt">The original prompt text.</param>
+    /// <param name="response">The original user response.</param>
+    /// <param name="date">The original date string for the entry.</param>
+    /// <param name="moodRating">The original mood rating.</param>
     public Entry(string prompt, string response, string date, int moodRating)
     {
-        this.prompt = prompt;
-        this.response = response;
-        this.date = date;
-        this.moodRating = moodRating;
+        this._promptText = prompt;
+        this._userResponse = response;
+        this._entryDateRaw = date; // Just assign the provided date directly.
+        this._moodScore = moodRating;
     }
 
-    public string GetPrompt() => prompt;
+    public string GetPrompt() => _promptText;
+    public string GetResponse() => _userResponse;
 
-    public string GetResponse() => response;
+    public string GetRawDateString() => _entryDateRaw;
 
-    /// <summary>Raw stored date string, e.g. "2026-07-16 14:32:05".</summary>
-    public string GetDate() => date;
+    public int GetMoodRating() => _moodScore;
 
-    public int GetMoodRating() => moodRating;
-
-    /// <summary>A friendly, human-readable version of the date for display.</summary>
-    public string GetFormattedDate()
+    public string GetFriendlyFormattedDate()
     {
-        if (DateTime.TryParse(date, out DateTime parsed))
+        // Always good to try and parse dates robustly. InvariantCulture helps with consistency.
+        if (DateTime.TryParse(this._entryDateRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
         {
-            return parsed.ToString("dddd, MMMM dd, yyyy h:mm tt");
+            // A common, friendly date format. Looks much better than the raw string!
+            return parsedDate.ToString("dddd, MMMM dd, yyyy h:mm tt");
         }
-        return date;
+        return this._entryDateRaw;
     }
 
-    /// <summary>Renders the mood rating as filled/empty stars, e.g. "★★★☆☆".</summary>
-    public string GetMoodStars()
+    public string GetMoodStarsVisual()
     {
-        int filled = Math.Clamp(moodRating, 0, 5);
-        return new string('★', filled) + new string('☆', 5 - filled);
+        int actualFilledStars = Math.Clamp(this._moodScore, 0, 5);
+
+        string filled = new string('★', actualFilledStars);
+        string empty = new string('☆', 5 - actualFilledStars);
+        return filled + empty;
     }
 
-    /// <summary>Prints this entry nicely formatted to the console.</summary>
-    public void Display(int index)
+    /// <param name="entryIndex">The sequential number of this entry in the journal list.</param>
+    public void DisplayEntryToConsole(int entryIndex)
     {
+        // A little visual separator and header for each entry.
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"\nEntry #{index} — {GetFormattedDate()}   {GetMoodStars()} ({moodRating}/5)");
+        Console.WriteLine($"\total--- Entry
+        Console.WriteLine($"Date: {GetFriendlyFormattedDate()}   Mood: {GetMoodStarsVisual()} ({_moodScore}/5)");
+
+        // Display the prompt in a distinct color.
         Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine($"❓ {prompt}");
+        Console.WriteLine($"Prompt: {_promptText}");
+
+        // Reset color for the response to make it easy on the eyes.
         Console.ResetColor();
-        Console.WriteLine($"   {response}");
-        Console.WriteLine(new string('-', 50));
+        Console.WriteLine($"Response: {_userResponse}");
+
+        // Another separator for readability.
+        Console.WriteLine(new string('=', 50)); // Using '=' for a slightly different look.
     }
 }
