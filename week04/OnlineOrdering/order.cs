@@ -40,11 +40,11 @@ class Order
 
     public string GetPackingLabel()
     {
-        string label = "Packing Label:\size";
+        string label = "Packing Label:\n";
 
         foreach (Product product in _products)
         {
-            label += $"{product.GetName()} (ID: {product.GetProductId()})\size";
+            label += $"{product.GetName()} (ID: {product.GetProductId()})\n";
         }
 
         return label.TrimEnd();
@@ -52,6 +52,6 @@ class Order
 
     public string GetShippingLabel()
     {
-        return $"Shipping Label:\size{_customer.GetName()}\size{_customer.GetAddress().GetFullAddress()}";
+        return $"Shipping Label:\n{_customer.GetName()}\n{_customer.GetAddress().GetFullAddress()}";
     }
 }
